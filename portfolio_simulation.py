@@ -4,6 +4,15 @@ from datetime import datetime
 from dataclasses import dataclass, asdict
 from typing import List, Dict, Any, Optional, Tuple
 
+# Fixed current prices for your ETFs
+FIXED_PRICES: Dict[str, float] = {
+    'amundi msci world v (acc)': 18.80,
+    'ishares core msci europe (acc)': 78.96,
+    'amundi msci emerging markets ii (dist)': 47.12,
+    # Add other ETFs and their fixed prices if needed
+}
+
+
 # Define your alias mapping here
 ALIAS_MAPPING: Dict[str, List[str]] = {
     'amundi msci world v (acc)': [
@@ -49,15 +58,6 @@ def get_canonical_name(instrument_name: str) -> str:
         str: The canonical name if found, otherwise returns the lowercased instrument name.
     """
     return INSTRUMENT_ALIAS.get(instrument_name.lower(), instrument_name.lower())
-
-
-# Fixed current prices for your ETFs
-FIXED_PRICES: Dict[str, float] = {
-    'amundi msci world v (acc)': 18.66,
-    'ishares core msci europe (acc)': 78.33,
-    'amundi msci emerging markets ii (dist)': 47.02,
-    # Add other ETFs and their fixed prices if needed
-}
 
 
 @dataclass
@@ -349,7 +349,9 @@ def main() -> None:
     display_portfolio(holdings, total_current_value, total_profit, total_unrealized_pl, realized_pl)
 
     # Ask the user for the desired profit
-    desired_profit_str = input('\nEnter the desired profit amount: €').replace(',', '.')
+    desired_profit_str = input(
+        '\nEnter the desired profit amount (max free amount for equity etfs is 1429 (in 2024)): €'
+    ).replace(',', '.')
     try:
         desired_profit = float(desired_profit_str)
         calculate_shares_to_sell(holdings, desired_profit)
